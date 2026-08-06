@@ -1,4 +1,3 @@
-unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY
 cat << 'EOF' > backtest.py
 import os
 os.environ['http_proxy'] = ''
