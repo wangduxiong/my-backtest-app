@@ -62,7 +62,12 @@ class DailyFixedAmountStrategy(bt.Strategy):
             print(f"{dt_str}\t{op:<6.2f}\t{cp:<6.2f}\t{daily_ret:+6.2f}%\t{accumulated_invested:<12.2f}\t{current_market_value:<14.2f}\t{cum_pnl:+12.2f}\t{cum_ret:+8.2f}%")
 
         print("=" * 95)
-
+        
+@st.cache_data(ttl=3600)  # 缓存数据 1 小时，避免重复请求接口
+def get_stock_data(symbol, start_date):
+    df = ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start_date, adjust="qfq")
+    return df
+    
 def get_stock_data(symbol="603399", start_date="20240624"):
     df = ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start_date, adjust="qfq")
     df = df[['日期', '开盘', '最高', '最低', '收盘', '成交量']]
