@@ -1,4 +1,23 @@
 import streamlit as st
+import yfinance as yf
+import pandas as pd
+
+@st.cache_data(ttl=3600)
+def get_stock_data(symbol, start_date):
+    # 自动识别沪深股市后缀：6开头的为沪市(.SS)，0或3开头为深市(.SZ)
+    ticker = f"{symbol}.SS" if symbol.startswith("6") else f"{symbol}.SZ"
+    
+    # 将 "20240624" 格式转为 yfinance 识别的 "2024-06-24"
+    formatted_start = f"{start_date[:4]}-{start_date[4:6]}-{start_date[6:]}"
+    
+    # 获取行情数据
+    df = yf.download(ticker, start=formatted_start)
+    
+    # 提取多层索引（yfinance 返回的数据格式适配）
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+        
+    return df
 import os
 os.environ['http_proxy'] = ''
 os.environ['https_proxy'] = ''
@@ -63,11 +82,6 @@ class DailyFixedAmountStrategy(bt.Strategy):
             print(f"{dt_str}\t{op:<6.2f}\t{cp:<6.2f}\t{daily_ret:+6.2f}%\t{accumulated_invested:<12.2f}\t{current_market_value:<14.2f}\t{cum_pnl:+12.2f}\t{cum_ret:+8.2f}%")
 
         print("=" * 95)
-        
-@st.cache_data(ttl=3600)  # 缓存数据 1 小时，避免重复请求接口
-def get_stock_data(symbol, start_date):
-    df = ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start_date, adjust="qfq")
-    return df
     
 def get_stock_data(symbol="603399", start_date="20240624"):
     df = ak.stock_zh_a_hist(symbol=symbol, period="daily", start_date=start_date, adjust="qfq")
