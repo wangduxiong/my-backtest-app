@@ -1,4 +1,3 @@
-cat << 'EOF' > backtest.py
 import os
 os.environ['http_proxy'] = ''
 os.environ['https_proxy'] = ''
@@ -81,4 +80,3 @@ if __name__ == '__main__':
     cerebro.addstrategy(DailyFixedAmountStrategy, daily_budget=10000)
     print("正在拉取 603399 数据并运行回测，请稍候...")
     cerebro.run()
-EOF
