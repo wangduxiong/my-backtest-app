@@ -82,4 +82,3 @@ if __name__ == '__main__':
     print("正在拉取 603399 数据并运行回测，请稍候...")
     cerebro.run()
 EOF
-python3 backtest.py
