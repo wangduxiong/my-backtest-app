@@ -1,6 +1,6 @@
 streamlit
 pandas
 numpy
-yfinance
-matplotlib
 akshare
+backtrader
+matplotlib
